@@ -13,9 +13,9 @@ var Outside = {
 	_INCOME: {
 		'gatherer': {
 			name: _('gatherer'),
-			delay: 5,
+			delay: 10,
 			stores: {
-				'wood': 0.5
+				'wood': 1
 			}
 		},
 		'hunter': {

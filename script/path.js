@@ -1,6 +1,5 @@
 var Path = {
-		
-	DEFAULT_BAG_SPACE: 20,
+	DEFAULT_BAG_SPACE: 10,
 	_STORES_OFFSET: 0,
 	// Everything not in this list weighs 1
 	Weight: {
@@ -72,14 +71,20 @@ var Path = {
 	},
 	
 	getCapacity: function() {
+		var capacity = Path.DEFAULT_BAG_SPACE;
 		if($SM.get('stores.convoy', true) > 0) {
-			return Path.DEFAULT_BAG_SPACE + 80;
-		} else if($SM.get('stores.wagon', true) > 0) {
-			return Path.DEFAULT_BAG_SPACE + 40;
-		} else if($SM.get('stores.rucksack', true) > 0) {
-			return Path.DEFAULT_BAG_SPACE + 20;
+			capacity += 40;
 		}
-		return Path.DEFAULT_BAG_SPACE;
+		if($SM.get('stores.wagon', true) > 0) {
+			capacity += 20;
+		}
+		if($SM.get('stores.rucksack', true) > 0) {
+			capacity += 10;
+		}
+		if($SM.hasPerk('barbarian')) {
+			capacity = Math.round(capacity * 1.2);
+		}
+		return capacity;
 	},
 	
 	getFreeSpace: function() {

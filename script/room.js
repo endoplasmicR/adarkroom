@@ -4,8 +4,8 @@
 var Room = {
 	// times in (minutes * seconds * milliseconds)
 	_FIRE_COOL_DELAY: 5 * 60 * 1000, // time after a stoke before the fire cools
-	_ROOM_WARM_DELAY: 30 * 1000, // time between room temperature updates
-	_BUILDER_STATE_DELAY: 0.5 * 60 * 1000, // time between builder state updates
+	_ROOM_WARM_DELAY: 15 * 1000, // time between room temperature updates
+	_BUILDER_STATE_DELAY: 0.3 * 60 * 1000, // time between builder state updates
 	_STOKE_COOLDOWN: 10, // cooldown to stoke the fire
 	_NEED_WOOD_DELAY: 15 * 1000, // from when the stranger shows up, to when you need wood
 	
@@ -67,23 +67,24 @@ var Room = {
 			cost: function() {
 				return {
 					wood: 200,
-					fur: 10,
-					meat: 5
+					fur: 20,
+					meat: 10
 				};
 			}
 		},
 		'trading post': {
 			name: _('trading post'),
 			button: null,
-			maximum: 1,
+			maximum: 6,
 			availableMsg: _("a trading post would make commerce easier"),
 			buildMsg: _("now the nomads have a place to set up shop, they might stick around a while"),
 			maxMsg: _("more trading posts won't help now"),
 			type: 'building',
 			cost: function() {
+				var n = $SM.get('game.buildings["trading post"]', true);
 				return {
-					'wood': 400,
-					'fur': 100
+					'wood': 400 + (n*100),
+					'fur': 100 + (n*20)
 				};
 			}
 		},
@@ -97,7 +98,7 @@ var Room = {
 			cost: function() {
 				return {
 					'wood': 500,
-					'fur': 50
+					'fur': 100
 				};
 			}
 		},
@@ -111,7 +112,7 @@ var Room = {
 			cost: function() {
 				return {
 					'wood': 600,
-					'meat': 50
+					'meat': 150
 				};
 			}
 		},
@@ -126,7 +127,7 @@ var Room = {
 				return {
 					'wood': 800,
 					'leather': 100,
-					'scales': 10
+					'scales': 40
 				};
 			}
 		},
@@ -218,7 +219,7 @@ var Room = {
 			cost: function() {
 				return {
 					'wood': 100,
-					'teeth': 5
+					'teeth': 20
 				};
 			}
 		},
@@ -337,25 +338,31 @@ var Room = {
 		}
 	},
 	
+	getTradingDiscount : function() {
+		var numTradingPost = $SM.get('game.buildings["trading post"]', true);
+		var discount = 1-(0.1*(numTradingPost-1));
+		return discount;
+	},
+
 	TradeGoods: {
 		'scales': {
 			type: 'good',
 			cost: function() {
-				return { fur: 150 };
+				return { fur: Math.round(150 * Room.getTradingDiscount()) };
 			}
 		},
 		'teeth': {
 			type: 'good',
 			cost: function() {
-				return { fur: 300 };
+				return { fur: Math.round(300 * Room.getTradingDiscount()) };
 			}
 		},
 		'iron': {
 			type: 'good',
 			cost: function() {
 				return {
-					'fur': 150,
-					'scales': 50
+					'fur': Math.round(150 * Room.getTradingDiscount()),
+					'scales': Math.round(50 * Room.getTradingDiscount())
 				};
 			}
 		},
@@ -363,8 +370,8 @@ var Room = {
 			type: 'good',
 			cost: function() {
 				return {
-					'fur': 200,
-					'teeth': 50
+					'fur': Math.round(200 * Room.getTradingDiscount()),
+					'teeth': Math.round(50 * Room.getTradingDiscount())
 				};
 			}
 		},
@@ -372,9 +379,9 @@ var Room = {
 			type: 'good',
 			cost: function() {
 				return {
-					'fur': 300,
-					'scales': 50,
-					'teeth': 50
+					'fur': Math.round(300 * Room.getTradingDiscount()),
+					'scales': Math.round(50 * Room.getTradingDiscount()),
+					'teeth': Math.round(50 * Room.getTradingDiscount())
 				};
 			}
 		},
@@ -382,7 +389,8 @@ var Room = {
 			type: 'good',
 			cost: function() {
 				return {
-					'scales': 50, 'teeth': 30
+					'scales': Math.round(50 * Room.getTradingDiscount()),
+					'teeth': Math.round(30 * Room.getTradingDiscount())
 				};
 			}
 		},
@@ -390,7 +398,7 @@ var Room = {
 			type: 'good',
 			cost: function() {
 				return {
-					'scales': 10
+					'scales': Math.round(10 * Room.getTradingDiscount())
 				};
 			}
 		},
@@ -398,8 +406,8 @@ var Room = {
 			type: 'good',
 			cost: function() {
 				return {
-					'scales': 10,
-					'teeth': 10
+					'scales': Math.round(10 * Room.getTradingDiscount()),
+					'teeth': Math.round(10 * Room.getTradingDiscount())
 				};
 			}
 		},
@@ -407,7 +415,7 @@ var Room = {
 			type: 'weapon',
 			cost: function() {
 				return {
-					'teeth': 10
+					'teeth': Math.round(10 * Room.getTradingDiscount())
 				};
 			}
 		},
@@ -415,8 +423,8 @@ var Room = {
 			type: 'weapon',
 			cost: function() {
 				return {
-					'scales': 100,
-					'teeth': 50
+					'scales': Math.round(100 * Room.getTradingDiscount()),
+					'teeth': Math.round(50 * Room.getTradingDiscount())
 				};
 			}
 		},
@@ -424,8 +432,8 @@ var Room = {
 			type: 'weapon',
 			cost: function() {
 				return {
-					'scales': 500,
-					'teeth': 250
+					'scales': Math.round(500 * Room.getTradingDiscount()),
+					'teeth': Math.round(250 * Room.getTradingDiscount())
 				};
 			}
 		},
@@ -433,9 +441,9 @@ var Room = {
 			type: 'good',
 			cost: function() {
 				return {
-					'fur': 1500,
-					'scales': 750,
-					'teeth': 300
+					'fur': Math.round(1500 * Room.getTradingDiscount()),
+					'scales': Math.round(750 * Room.getTradingDiscount()),
+					'teeth': Math.round(300 * Room.getTradingDiscount())
 				};
 			}
 		},
@@ -444,9 +452,9 @@ var Room = {
 			maximum: 1,
 			cost: function() {
 				return { 
-					fur: 400, 
-					scales: 20, 
-					teeth: 10 
+					fur: Math.round(400 * Room.getTradingDiscount()),
+					scales: Math.round(20 * Room.getTradingDiscount()),
+					teeth: Math.round(10 * Room.getTradingDiscount())
 				};
 			}
 		}
@@ -562,7 +570,7 @@ var Room = {
 			$SM.add('game.builder.level', 1);
 			$SM.setIncome('builder', {
 				delay: 10,
-				stores: {'wood' : 2 }
+				stores: {'wood' : Math.round($SM.get('game.builder.level')/2) }
 			});
 			Room.updateIncomeView();
 			Notifications.notify(Room, _("the stranger is standing by the fire. she says she can help. says she builds things."));
@@ -753,7 +761,7 @@ var Room = {
 	
 	updateStoresView: function() {
 		var stores = $('div#stores');
-	  var resources = $('div#resources');
+		var resources = $('div#resources');
 		var special = $('div#special');
 		var weapons = $('div#weapons');
 		var needsAppend = false, rNeedsAppend = false, sNeedsAppend = false, wNeedsAppend = false, newRow = false;
@@ -948,6 +956,34 @@ var Room = {
 		$SM.add('stores["'+thing+'"]', 1);
 	},
 	
+	builderUpgrade: function(thing) {
+		if (thing != "trap" && thing != "cart") {
+			$SM.add('game.builder.level', 1);
+		}
+		var builderIncome = {'wood' : Math.floor($SM.get('game.builder.level')/2) };
+
+		if ($SM.get('game.buildings["lodge"]', true) > 0) {
+			var rate = 1+Math.floor($SM.get('game.builder.level')/4);
+			builderIncome = $.extend(builderIncome, {'fur':rate, 'meat':rate});
+		}
+		if ($SM.get('game.buildings["tannery"]', true) > 0) {
+			var rate = 1+Math.floor($SM.get('game.builder.level')/8);
+			builderIncome = $.extend(builderIncome, {'leather': rate});
+		}
+		if ($SM.get('game.buildings["smokehouse"]', true) > 0) {
+			var rate = 1+Math.floor($SM.get('game.builder.level')/16);
+			builderIncome = $.extend(builderIncome, {'cured meat': rate});
+		}
+		if ($SM.get('game.buildings["steelworks"]', true) > 0) {
+			var rate = 1+Math.floor($SM.get('game.builder.level')/32);
+			builderIncome = $.extend(builderIncome, {'iron': rate, 'coal':rate, 'steel':rate});
+		}
+		$SM.setIncome('builder', {
+			delay: 10,
+			stores: builderIncome
+		});
+	},
+
 	build: function(buildBtn) {
 		var thing = $(buildBtn).attr('buildThing');
 		if($SM.get('game.temperature.value') <= Room.TempEnum.Cold.value) {
@@ -998,6 +1034,7 @@ var Room = {
 			break;
 		case 'building':
 			$SM.add('game.buildings["'+thing+'"]', 1);
+			Room.builderUpgrade(thing);
 			break;
 		}		
 	},

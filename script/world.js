@@ -26,7 +26,7 @@ var World = {
 	LANDMARKS: {},
 	STICKINESS: 0.5, // 0 <= x <= 1
 	LIGHT_RADIUS: 2,
-	BASE_WATER: 20,
+	BASE_WATER: 10,
 	MOVES_PER_FOOD: 2,
 	MOVES_PER_WATER: 1,
 	DEATH_COOLDOWN: 60,
@@ -915,32 +915,41 @@ var World = {
 	},
 
 	getMaxHealth: function() {
+		var maxHealth = World.BASE_HEALTH;
 		if($SM.get('stores["s armour"]', true) > 0) {
-			return World.BASE_HEALTH + 40;
-		} else if($SM.get('stores["i armour"]', true) > 0) {
-			return World.BASE_HEALTH + 20;
-		} else if($SM.get('stores["l armour"]', true) > 0) {
-			return World.BASE_HEALTH + 10;
+			maxHealth += 20;
 		}
-		return World.BASE_HEALTH;
+		if($SM.get('stores["i armour"]', true) > 0) {
+			maxHealth += 10;
+		}
+		if($SM.get('stores["l armour"]', true) > 0) {
+			maxHealth += 5;
+		}
+		if($SM.hasPerk('evasive')) {
+			maxHealth = Math.round(maxHealth * 1.2);
+		}
+		return maxHealth;
 	},
 
 	getHitChance: function() {
 		if($SM.hasPerk('precise')) {
-			return World.BASE_HIT_CHANCE + 0.1;
+			return World.BASE_HIT_CHANCE + 0.15;
 		}
 		return World.BASE_HIT_CHANCE;
 	},
 
 	getMaxWater: function() {
+		var maxWater = World.BASE_WATER;
 		if($SM.get('stores["water tank"]', true) > 0) {
-			return World.BASE_WATER + 60;
-		} else if($SM.get('stores.cask', true) > 0) {
-			return World.BASE_WATER + 40;
-		} else if($SM.get('stores.waterskin', true) > 0) {
-			return World.BASE_WATER + 20;
+			maxWater =+ 20;
 		}
-		return World.BASE_WATER;
+		if($SM.get('stores.cask', true) > 0) {
+			maxWater =+ 20;
+		}
+		if($SM.get('stores.waterskin', true) > 0) {
+			maxWater =+ 20;
+		}
+		return maxWater;
 	},
 
 	outpostUsed: function(x, y) {

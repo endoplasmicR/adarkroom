@@ -3,7 +3,7 @@
  */
 var Events = {
 
-	_EVENT_TIME_RANGE: [3, 6], // range, in minutes
+	_EVENT_TIME_RANGE: [2, 5], // range, in minutes
 	_PANEL_FADE: 200,
 	_FIGHT_SPEED: 100,
 	_EAT_COOLDOWN: 5,
@@ -315,6 +315,9 @@ var Events = {
 						dmg *= 2;
 					}
 					if(weapon.type == 'melee' && $SM.hasPerk('barbarian')) {
+						dmg = Math.floor(dmg * 1.5);
+					}
+					if(weapon.type == 'ranged' && $SM.hasPerk('precise')) {
 						dmg = Math.floor(dmg * 1.5);
 					}
 				}

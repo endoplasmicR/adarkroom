@@ -18,12 +18,12 @@ Events.Room = [
 				buttons: {
 					'buyScales': {
 						text: _('buy scales'),
-						cost: { 'fur': 100 },
+						cost: { 'fur': Math.round(100 * Room.getTradingDiscount())},
 						reward: { 'scales': 1 }
 					},
 					'buyTeeth': {
 						text: _('buy teeth'),
-						cost: { 'fur': 200 },
+						cost: { 'fur': Math.round(200 * Room.getTradingDiscount())},
 						reward: { 'teeth': 1 }
 					},
 					'buyBait': {
@@ -37,7 +37,7 @@ Events.Room = [
 							return $SM.get('stores.compass', true) < 1;
 						},
 						text: _('buy compass'),
-						cost: { fur: 300, scales: 15, teeth: 5 },
+						cost: { fur: Math.round(300 * Room.getTradingDiscount()), scales: Math.round(10 * Room.getTradingDiscount()), teeth: 5 },
 						reward: { 'compass': 1 },
 						notification: _('the old compass is dented and dusty, but it looks to work.')
 					}, 
@@ -65,7 +65,7 @@ Events.Room = [
 				buttons: {
 					'investigate': {
 						text: _('investigate'),
-						nextScene: { 0.3: 'stuff', 1: 'nothing' }
+						nextScene: { 0.4: 'stuff', 0.6: 'nothing' }
 					},
 					'ignore': {
 						text: _('ignore them'),
@@ -86,7 +86,7 @@ Events.Room = [
 				}
 			},
 			'stuff': {
-				reward: { wood: 100, fur: 10 },
+				reward: { wood: 50 + Math.round(Math.random() * 50), fur: 10 + Math.round(Math.random() * 10) },
 				text: [
 					_('a bundle of sticks lies just beyond the threshold, wrapped in coarse furs.'),
 					_('the night is silent.')
@@ -189,7 +189,7 @@ Events.Room = [
 	{ /* The Beggar  --  trade fur for better good */
 		title: _('The Beggar'),
 		isAvailable: function() {
-			return Engine.activeModule == Room && $SM.get('stores.fur');
+			return Engine.activeModule == Room && $SM.get('stores.fur') && ($SM.get('stores.fur', true) > 50);
 		},
 		scenes: {
 			start: {
@@ -261,7 +261,7 @@ Events.Room = [
 	{ /* Mysterious Wanderer  --  wood gambling */
 		title: _('The Mysterious Wanderer'),
 		isAvailable: function() {
-			return Engine.activeModule == Room && $SM.get('stores.wood');
+			return Engine.activeModule == Room && $SM.get('stores.wood') && ($SM.get('stores.wood', true) > 100);
 		},
 		scenes: {
 			start: {
@@ -340,7 +340,7 @@ Events.Room = [
 	{ /* Mysterious Wanderer  --  fur gambling */
 		title: _('The Mysterious Wanderer'),
 		isAvailable: function() {
-			return Engine.activeModule == Room && $SM.get('stores.fur');
+			return Engine.activeModule == Room && $SM.get('stores.fur') && ($SM.get('stores.fur', true) > 100);
 		},
 		scenes: {
 			start: {

@@ -14,7 +14,7 @@ Events.Outside = [
 					_('large prints lead away, into the forest.')
 				],
 				onLoad: function() {
-					var numWrecked = Math.floor(Math.random() * $SM.get('game.buildings["trap"]', true)) + 1;
+					var numWrecked = Math.floor(Math.random() * $SM.get('game.buildings["trap"]', true)/2) + 1;
 					$SM.add('game.buildings["trap"]', -numWrecked);
 					Outside.updateVillage();
 					Outside.updateTrapButton();
@@ -24,7 +24,7 @@ Events.Outside = [
 				buttons: {
 					'track': {
 						text: _('track them'),
-						nextScene: {0.5: 'nothing', 1: 'catch'}
+						nextScene: {0.5: 'nothing', 0.5: 'catch'}
 					},
 					'ignore': {
 						text: _('ignore them'),
@@ -52,9 +52,9 @@ Events.Outside = [
 				],
 				notification: _('there was a beast. it\'s dead now'),
 				reward: {
-					fur: 100,
-					meat: 100,
-					teeth: 10
+					fur: 50,
+					meat: 25,
+					teeth: 5
 				},
 				buttons: {
 					'end': {
@@ -238,9 +238,9 @@ Events.Outside = [
 					Outside.killVillagers(numKilled);
 				},
 				reward: {
-					fur: 100,
-					meat: 100,
-					teeth: 10
+					fur: 50,
+					meat: 25,
+					teeth: 5
 				},
 				blink: true,
 				buttons: {
