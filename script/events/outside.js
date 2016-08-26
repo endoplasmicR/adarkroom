@@ -24,7 +24,7 @@ Events.Outside = [
 				buttons: {
 					'track': {
 						text: _('track them'),
-						nextScene: {0.5: 'nothing', 0.5: 'catch'}
+						nextScene: {0.4: 'nothing', 0.6: 'catch'}
 					},
 					'ignore': {
 						text: _('ignore them'),

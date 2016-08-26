@@ -277,7 +277,7 @@ var Events = {
 						out = true;
 					}
 				}
-				for(var k in mod) {
+				for(k in mod) {
 					Path.outfit[k] += mod[k];
 				}
 				if(out) {
@@ -507,11 +507,12 @@ var Events = {
 		if(weight > freeSpace) {
 			// Draw the drop menu
 			Engine.log('drop menu');
+			var dropMenu = null;
 			if($('#dropMenu').length){
-				var dropMenu = $('#dropMenu');
+				dropMenu = $('#dropMenu');
 				$('#dropMenu').empty();
 			} else {
-				var dropMenu = $('<div>').attr({'id': 'dropMenu', 'data-legend': _('drop:')});
+				dropMenu = $('<div>').attr({'id': 'dropMenu', 'data-legend': _('drop:')});
 				needsAppend = true;
 			}
 			for(var k in Path.outfit) {
@@ -587,9 +588,10 @@ var Events = {
 			}
 		}
 		lootButtons.appendTo(desc);
+		var takeET = null;
 		if(lootButtons.children().length > 0) {
 			var takeETrow = $('<div>').addClass('takeETrow');
-			var takeET = new Button.Button({
+			takeET = new Button.Button({
 				id: 'loot_takeEverything',
 				text: '',
 				click: Events.takeEverything
@@ -606,7 +608,7 @@ var Events = {
 	},
 
 	setTakeAll: function(lootButtons){
-		var lootButtons = lootButtons || $('#lootButtons');
+		lootButtons = lootButtons || $('#lootButtons');
 		var canTakeSomething = false;
 		var free = Path.getFreeSpace();
 		var takeETbutton = lootButtons.find('#loot_takeEverything');
@@ -657,7 +659,7 @@ var Events = {
 			btn.data('canLeave', true);
 		} else {
 			textbox.text( basetext );
-			btn.data('canLeave', false)
+			btn.data('canLeave', false);
 		}
 	},
 
@@ -688,7 +690,7 @@ var Events = {
 	getLoot: function(btn, skipButtonSet) {
 		var name = btn.attr('id').substring(5).replace('-', ' ');
 		if(btn.data('numLeft') > 0) {
-			var skipButtonSet = skipButtonSet || false;
+			skipButtonSet = skipButtonSet || false;
 			var weight = Path.getWeight(name);
 			var freeSpace = Path.getFreeSpace();
 			if(weight <= freeSpace) {
@@ -768,9 +770,10 @@ var Events = {
 			Engine.autoSelect('#description textarea');
 		}
 
+		var takeETbtn = false;
 		// Draw any loot
 		if(scene.loot) {
-			var takeETbtn = Events.drawLoot(scene.loot);
+			takeETbtn = Events.drawLoot(scene.loot);
 		}
 
 		// Draw the buttons
@@ -1022,7 +1025,7 @@ var Events = {
 				if(typeof target[i] == 'function'){
 					target[i]();
 				} else {
-					$SM.remove(stateName)
+					$SM.remove(stateName);
 				}
 			}
 		}
@@ -1036,7 +1039,7 @@ var Events = {
 		if(delay){
 			$SM.set(state, delay);
 		} else {
-			var delay = $SM.get(state, true)
+			delay = $SM.get(state, true);
 		}
 		var time = Engine.setInterval(function(){
 			// update state every half second

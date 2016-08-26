@@ -139,8 +139,8 @@ var World = {
 		if(typeof $SM.get('features.location.world') == 'undefined') {
 			$SM.set('features.location.world', true);
 			$SM.setM('game.world', {
-				map: World.generateMap(),
-				mask: World.newMask()
+				map: World.generateMap(World.RADIUS),
+				mask: World.newMask(World.RADIUS)
 			});
 		}
 
@@ -168,13 +168,19 @@ var World = {
 		$.Dispatch('stateUpdate').subscribe(World.handleStateUpdates);
 	},
 
-	clearDungeon: function() {
+	clearDungeon: function(radius) {
+		if (!radius) {
+			radius = World.RADIUS;
+		}
 		Engine.event('progress', 'dungeon cleared');
 		World.state.map[World.curPos[0]][World.curPos[1]] = World.TILE.OUTPOST;
-		World.drawRoad();
+		World.drawRoad(radius);
 	},
 
-	drawRoad: function() {
+	drawRoad: function(radius) {
+		if (!radius) {
+			radius = World.RADIUS;
+		}
 		var findClosestRoad = function(startPos) {
 			// We'll search in a spiral to find the closest road tile
 			// We spiral out along manhattan distance contour
@@ -189,7 +195,7 @@ var World = {
 			for (var i = 0; i < Math.pow(World.getDistance(startPos, World.VILLAGE_POS) + 2, 2); i++) {
 				searchX = startPos[0] + x;
 				searchY = startPos[1] + y;
-				if (0 < searchX && searchX < World.RADIUS * 2 && 0 < searchY && searchY < World.RADIUS * 2) {
+				if (0 < searchX && searchX < radius * 2 && 0 < searchY && searchY < radius * 2) {
 					// check for road
 					var tile = World.state.map[searchX][searchY];
 					if (
@@ -590,12 +596,15 @@ var World = {
 		}
 	},
 
-	newMask: function() {
-		var mask = new Array(World.RADIUS * 2 + 1);
-		for(var i = 0; i <= World.RADIUS * 2; i++) {
-			mask[i] = new Array(World.RADIUS * 2 + 1);
+	newMask: function(radius) {
+		if (!radius) {
+			radius = World.RADIUS;
 		}
-		World.lightMap(World.RADIUS, World.RADIUS, mask);
+		var mask = new Array(radius * 2 + 1);
+		for(var i = 0; i <= radius * 2; i++) {
+			mask[i] = new Array(radius * 2 + 1);
+		}
+		World.lightMap(radius, radius, mask);
 		return mask;
 	},
 
@@ -625,39 +634,42 @@ var World = {
 		World.uncoverMap(x, y, 5, $SM.get('game.world.mask'));
 	},
 
-	generateMap: function() {
-		var map = new Array(World.RADIUS * 2 + 1);
-		for(var i = 0; i <= World.RADIUS * 2; i++) {
-			map[i] = new Array(World.RADIUS * 2 + 1);
+	generateMap: function(radius) {
+		if (!radius) {
+			radius = World.RADIUS;
+		}
+		var map = new Array(radius * 2 + 1);
+		for(var i = 0; i <= radius * 2; i++) {
+			map[i] = new Array(radius * 2 + 1);
 		}
 		// The Village is always at the exact center
 		// Spiral out from there
-		map[World.RADIUS][World.RADIUS] = World.TILE.VILLAGE;
-		for(var r = 1; r <= World.RADIUS; r++) {
+		map[radius][radius] = World.TILE.VILLAGE;
+		for(var r = 1; r <= radius; r++) {
 			for(var t = 0; t < r * 8; t++) {
 				var x, y;
 				if(t < 2 * r) {
-					x = World.RADIUS - r + t;
-					y = World.RADIUS - r;
+					x = radius - r + t;
+					y = Wradius - r;
 				} else if(t < 4 * r) {
-					x = World.RADIUS + r;
-					y = World.RADIUS - (3 * r) + t;
+					x = radius + r;
+					y = radius - (3 * r) + t;
 				} else if(t < 6 * r) {
-					x = World.RADIUS + (5 * r) - t;
-					y = World.RADIUS + r;
+					x = radius + (5 * r) - t;
+					y = radius + r;
 				} else {
-					x = World.RADIUS - r;
-					y = World.RADIUS + (7 * r) - t;
+					x = radius - r;
+					y = radius + (7 * r) - t;
 				}
 
-				map[x][y] = World.chooseTile(x, y, map);
+				map[x][y] = World.chooseTile(x, y, map, radius);
 			}
 		}
 
 		// Place landmarks
 		for(var k in World.LANDMARKS) {
 			var landmark = World.LANDMARKS[k];
-			for(var i = 0; i < landmark.num; i++) {
+			for(i = 0; i < landmark.num; i++) {
 				var pos = World.placeLandmark(landmark.minRadius, landmark.maxRadius, k, map);
 			}
 		}
@@ -685,7 +697,7 @@ var World = {
 					targets[index] = {
 						x : i - World.RADIUS,
 						y : j - World.RADIUS,
-					}
+					};
 					index++;
 					if(index === max){
 						// optimisation: stop the research if maximum number of items has been reached
@@ -735,12 +747,12 @@ var World = {
 		return tile == World.TILE.FOREST || tile == World.TILE.FIELD || tile == World.TILE.BARRENS;
 	},
 
-	chooseTile: function(x, y, map) {
+	chooseTile: function(x, y, map, radius) {
 
 		var adjacent = [
 			y > 0 ? map[x][y-1] : null,
-			y < World.RADIUS * 2 ? map[x][y+1] : null,
-			x < World.RADIUS * 2 ? map[x+1][y] : null,
+			y < radius * 2 ? map[x][y+1] : null,
+			x < radius * 2 ? map[x+1][y] : null,
 			x > 0 ? map[x-1][y] : null
 		];
 
@@ -768,7 +780,7 @@ var World = {
 		}
 
 		var list = [];
-		for(var t in chances) {
+		for(t in chances) {
 			list.push(chances[t] + '' + t);
 		}
 		list.sort(function(a, b) {
@@ -779,7 +791,7 @@ var World = {
 
 		var c = 0;
 		var r = Math.random();
-		for(var i in list) {
+		for(i in list) {
 			var prob = list[i];
 			c += parseFloat(prob.substring(0,prob.length - 1));
 			if(r < c) {

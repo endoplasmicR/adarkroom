@@ -293,7 +293,7 @@ Events.Room = [
 					_('the wanderer leaves, cart loaded with wood')
 				],
 				action: function(delay) {
-					var delay = delay || false;
+					delay = delay || false;
 					Events.saveDelay(function() {
 						$SM.add('stores.wood', 300);
 						Notifications.notify(Room, _('the mysterious wanderer returns, cart piled high with wood.'));
@@ -316,7 +316,7 @@ Events.Room = [
 					_('the wanderer leaves, cart loaded with wood')
 				],
 				action: function(delay) {
-					var delay = delay || false;
+					delay = delay || false;
 					Events.saveDelay(function() {
 						$SM.add('stores.wood', 1500);
 						Notifications.notify(Room, _('the mysterious wanderer returns, cart piled high with wood.'));
@@ -372,7 +372,7 @@ Events.Room = [
 					_('the wanderer leaves, cart loaded with furs')
 				],
 				action: function(delay) {
-					var delay = delay || false;
+					delay = delay || false;
 					Events.saveDelay(function() {
 						$SM.add('stores.fur', 300);
 						Notifications.notify(Room, _('the mysterious wanderer returns, cart piled high with furs.'));
@@ -395,7 +395,7 @@ Events.Room = [
 					_('the wanderer leaves, cart loaded with furs')
 				],
 				action: function(delay) {
-					var delay = delay || false;
+					delay = delay || false;
 					Events.saveDelay(function() {
 						$SM.add('stores.fur', 1500);
 						Notifications.notify(Room, _('the mysterious wanderer returns, cart piled high with furs.'));
