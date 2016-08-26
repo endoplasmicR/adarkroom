@@ -26,10 +26,12 @@ var World = {
 	LANDMARKS: {},
 	STICKINESS: 0.5, // 0 <= x <= 1
 	LIGHT_RADIUS: 2,
-	BASE_WATER: 10,
+	BASE_WATER: 20,
 	MOVES_PER_FOOD: 2,
 	MOVES_PER_WATER: 1,
-	DEATH_COOLDOWN: 120,
+	DEATH_COOLDOWN: 60,
+	MAX_DEHYDRATED: 5,
+	MAX_STARVED: 5,
 	FIGHT_CHANCE: 0.20,
 	BASE_HEALTH: 10,
 	BASE_HIT_CHANCE: 0.8,
@@ -458,7 +460,7 @@ var World = {
 				} else {
 					$SM.set('character.starved', $SM.get('character.starved', true));
 					$SM.add('character.starved', 1);
-					if($SM.get('character.starved') >= 10 && !$SM.hasPerk('slow metabolism')) {
+					if($SM.get('character.starved') >= World.MAX_STARVED && !$SM.hasPerk('slow metabolism')) {
 						$SM.addPerk('slow metabolism');
 					}
 					World.die();
@@ -487,7 +489,7 @@ var World = {
 				} else {
 					$SM.set('character.dehydrated', $SM.get('character.dehydrated', true));
 					$SM.add('character.dehydrated', 1);
-					if($SM.get('character.dehydrated') >= 10 && !$SM.hasPerk('desert rat')) {
+					if($SM.get('character.dehydrated') >= World.MAX_DEHYDRATED && !$SM.hasPerk('desert rat')) {
 						$SM.addPerk('desert rat');
 					}
 					World.die();
@@ -914,11 +916,11 @@ var World = {
 
 	getMaxHealth: function() {
 		if($SM.get('stores["s armour"]', true) > 0) {
-			return World.BASE_HEALTH + 35;
+			return World.BASE_HEALTH + 40;
 		} else if($SM.get('stores["i armour"]', true) > 0) {
-			return World.BASE_HEALTH + 15;
+			return World.BASE_HEALTH + 20;
 		} else if($SM.get('stores["l armour"]', true) > 0) {
-			return World.BASE_HEALTH + 5;
+			return World.BASE_HEALTH + 10;
 		}
 		return World.BASE_HEALTH;
 	},
@@ -932,11 +934,11 @@ var World = {
 
 	getMaxWater: function() {
 		if($SM.get('stores["water tank"]', true) > 0) {
-			return World.BASE_WATER + 50;
+			return World.BASE_WATER + 60;
 		} else if($SM.get('stores.cask', true) > 0) {
-			return World.BASE_WATER + 20;
+			return World.BASE_WATER + 40;
 		} else if($SM.get('stores.waterskin', true) > 0) {
-			return World.BASE_WATER + 10;
+			return World.BASE_WATER + 20;
 		}
 		return World.BASE_WATER;
 	},

@@ -1,6 +1,6 @@
 var Path = {
 		
-	DEFAULT_BAG_SPACE: 10,
+	DEFAULT_BAG_SPACE: 20,
 	_STORES_OFFSET: 0,
 	// Everything not in this list weighs 1
 	Weight: {
@@ -11,7 +11,11 @@ var Path = {
 		'bullets': 0.1,
 		'energy cell': 0.2,
 		'laser rifle': 5,
-		'bolas': 0.5
+		'bolas': 0.5,
+		//resource
+		'teeth': 0.2,
+		'scales': 0.2,
+		'cloth': 0.5,
 	},
 		
 	name: 'Path',
@@ -69,11 +73,11 @@ var Path = {
 	
 	getCapacity: function() {
 		if($SM.get('stores.convoy', true) > 0) {
-			return Path.DEFAULT_BAG_SPACE + 60;
+			return Path.DEFAULT_BAG_SPACE + 80;
 		} else if($SM.get('stores.wagon', true) > 0) {
-			return Path.DEFAULT_BAG_SPACE + 30;
+			return Path.DEFAULT_BAG_SPACE + 40;
 		} else if($SM.get('stores.rucksack', true) > 0) {
-			return Path.DEFAULT_BAG_SPACE + 10;
+			return Path.DEFAULT_BAG_SPACE + 20;
 		}
 		return Path.DEFAULT_BAG_SPACE;
 	},

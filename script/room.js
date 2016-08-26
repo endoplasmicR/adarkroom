@@ -15,7 +15,7 @@ var Room = {
 		'trap': {
 			name: _('trap'),
 			button: null,
-			maximum: 10,
+			maximum: 20,
 			availableMsg: _('builder says she can make traps to catch any creatures might still be alive out there'),
 			buildMsg: _('more traps to catch more creatures'),
 			maxMsg: _("more traps won't help now"),
@@ -30,20 +30,22 @@ var Room = {
 		'cart': {
 			name: _('cart'),
 			button: null,
-			maximum: 1,
+			maximum: 5,
 			availableMsg: _('builder says she can make a cart for carrying wood'),
 			buildMsg: _('the rickety cart will carry more wood from the forest'),
+			maxMsg: _("more carts won't help now"),
 			type: 'building',
 			cost: function() {
+				var n = $SM.get('game.buildings["cart"]', true);
 				return {
-					'wood': 30
+					'wood': 30 + (n*30)
 				};
 			}
 		},
 		'hut': {
 			name: _('hut'),
 			button: null,
-			maximum: 20,
+			maximum: 30,
 			availableMsg: _("builder says there are more wanderers. says they'll work, too."),
 			buildMsg: _('builder puts up a hut, out in the forest. says word will get around.'),
 			maxMsg: _('no more room for huts.'),
@@ -76,6 +78,7 @@ var Room = {
 			maximum: 1,
 			availableMsg: _("a trading post would make commerce easier"),
 			buildMsg: _("now the nomads have a place to set up shop, they might stick around a while"),
+			maxMsg: _("more trading posts won't help now"),
 			type: 'building',
 			cost: function() {
 				return {
@@ -164,7 +167,7 @@ var Room = {
 			buildMsg: _('a torch to keep the dark away'),
 			cost: function() {
 				return {
-					'wood': 1,
+					'wood': 10,
 					'cloth': 1
 				};
 			}

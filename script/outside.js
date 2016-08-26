@@ -13,9 +13,9 @@ var Outside = {
 	_INCOME: {
 		'gatherer': {
 			name: _('gatherer'),
-			delay: 10,
+			delay: 5,
 			stores: {
-				'wood': 1
+				'wood': 0.5
 			}
 		},
 		'hunter': {
@@ -592,7 +592,8 @@ var Outside = {
 	
 	gatherWood: function() {
 		Notifications.notify(Outside, _("dry brush and dead branches litter the forest floor"));
-		var gatherAmt = $SM.get('game.buildings["cart"]', true) > 0 ? 50 : 10;
+		var numCart = $SM.get('game.buildings["cart"]', true);
+		var gatherAmt = numCart > 0 ? 10+(40*numCart) : 10;
 		$SM.add('stores.wood', gatherAmt);
 	},
 	
